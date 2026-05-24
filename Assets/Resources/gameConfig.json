@@ -1,0 +1,10 @@
+{
+  "moneyMultiplierFromGems": 0.2,
+  "potionMoneyBoost": 2.0,
+  "potionDuration": 30.0,
+  "rebirthGemReward": 5,
+  "upgradeCostMultiplier": 1.5,
+  "rebirthCostMultiplier": 2.0,
+  "gemUpgradeBonus": 1.0,
+  "potionDropChance": 0.1
+}
