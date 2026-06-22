@@ -63,6 +63,17 @@ public class GameManager : MonoBehaviour
 
         if (coinPanel != null) coinPanel.SetActive(true);
         if (gemPanel != null) gemPanel.SetActive(false);
+
+        if (PlayerPrefs.GetInt("LOAD_GAME", 0) == 1)
+        {
+            LoadGame();
+
+            PlayerPrefs.SetInt("LOAD_GAME", 0);
+        }
+    }
+    void OnApplicationQuit()
+    {
+        SaveGame();
     }
 
     void Update()
@@ -204,6 +215,81 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
     }
 
+    public void SaveGame()
+    {
+        SaveData data = new SaveData();
+
+        data.money = money;
+        data.moneyPerSecond = moneyPerSecond;
+        data.upgradeCost = upgradeCost;
+
+        data.boostCost = boostCost;
+
+        data.gem = gem;
+        data.gemUpgradeCost = gemUpgradeCost;
+
+        data.level = level;
+        data.exp = exp;
+        data.expToNextLevel = expToNextLevel;
+
+        string json = JsonUtility.ToJson(data);
+
+        PlayerPrefs.SetString("SAVE_DATA", json);
+        PlayerPrefs.Save();
+
+        Debug.Log("セーブ完了");
+    }
+    public void LoadGame()
+    {
+        if (!PlayerPrefs.HasKey("SAVE_DATA"))
+        {
+            Debug.Log("セーブデータなし");
+            return;
+        }
+
+        string json = PlayerPrefs.GetString("SAVE_DATA");
+
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        money = data.money;
+        moneyPerSecond = data.moneyPerSecond;
+        upgradeCost = data.upgradeCost;
+
+        boostCost = data.boostCost;
+
+        gem = data.gem;
+        gemUpgradeCost = data.gemUpgradeCost;
+
+        level = data.level;
+        exp = data.exp;
+        expToNextLevel = data.expToNextLevel;
+
+        Debug.Log("ロード完了");
+    }
+
+    public void SaveAndTitle()
+    {
+        SaveGame();
+        Destroy(gameObject);
+        SceneManager.LoadScene("TitleScene");
+    }
+
+}
 
 
+[System.Serializable]
+public class SaveData
+{
+    public double money;
+    public double moneyPerSecond;
+    public double upgradeCost;
+
+    public double boostCost;
+
+    public int gem;
+    public int gemUpgradeCost;
+
+    public int level;
+    public float exp;
+    public float expToNextLevel;
 }
